@@ -61,3 +61,90 @@ func hapusPerangkat(index int) {
 	jumlahperangkat--
 	fmt.Println("[OK] Perangkat", namaHapus, "berhasil dihapus!")
 }
+
+func sequentialsearchnama(namacari string) {
+	ketemu := false
+	fmt.Println("\n=== Hasil Pencarian (Sequential Search) ===")
+	for i := 0; i < jumlahperangkat; i++ {
+		if daftarperangkat[i].nama == namacari {
+			fmt.Printf("Ditemukan di No %d:\n", i+1)
+			fmt.Println("  Ruangan:", daftarperangkat[i].ruangan)
+			fmt.Println("  Nama   :", daftarperangkat[i].nama)
+			fmt.Println("  Watt   :", daftarperangkat[i].watt, "W")
+			fmt.Println("  Jam    :", daftarperangkat[i].jampakai, "jam/hari")			
+			ketemu = true
+		}
+	}
+	if !ketemu {
+		fmt.Println("Perangkat tidak ditemukan.")
+	}
+}
+
+func sequientialsearchruangan(ruangancari string) {
+	ketemu := false
+	fmt.Println("\n=== Perangkat di Ruangan:", ruangancari, "===")
+	for i := 0; i < jumlahperangkat; i++ {
+		if daftarperangkat[i].ruangan == ruangancari {
+			fmt.Printf("No %d: %s (%.1f W, %.1f jam)\n",
+				i+1,
+				daftarperangkat[i].nama,
+				daftarperangkat[i].watt,
+				daftarperangkat[i].jampakai)
+				ketemu = true
+		}
+	}
+	if !ketemu{
+		fmt.Println("Tidak ada perangkat di ruangan tersebut.")
+	}
+}
+
+func binarysearchnama(namacari string) {
+	if jumlahperangkat == 0 {
+		fmt.Println("Data kosong!")
+		return
+	}
+
+	var salinan [100]perangkat
+	for i := 0; i < jumlahperangkat; i++ {
+		salinan[i] = daftarperangkat[i]
+	}
+
+	for i := 1; i < jumlahperangkat; i++ {
+		kunci := salinan[i]
+		j := i - 1
+		for j >= 0 && salinan[j].nama > kunci.nama {
+			salinan[j+1] = salinan[j]
+			j--
+		}
+		salinan[j+1] = kunci
+	}
+
+	kiri := 0
+	kanan := jumlahperangkat - 1
+	ketemu := false 
+
+	fmt.Println("\n=== Hasil Binary Search ===")
+	for kiri <= kanan {
+		tengah := (kiri + kanan) / 2
+		namatengah := salinan[tengah].nama
+		namacaritarget := namacari
+
+		if namatengah == namacaritarget {
+			fmt.Println("Perangkat ditemukan!")
+			fmt.Println("  Ruangan:", salinan[tengah].ruangan)
+			fmt.Println("  Nama   :", salinan[tengah].nama)
+			fmt.Println("  Watt   :", salinan[tengah].watt, "W")
+			fmt.Println("  Jam    :", salinan[tengah].jampakai, "jam/hari")		
+			ketemu = true
+			break
+		} else if namacaritarget < namatengah {
+			kanan = tengah - 1
+		} else {
+			kiri = tengah + 1
+		}
+	}
+
+	if !ketemu {
+		fmt.Println("Perangkat tidak ditemukan.")
+	}
+}
